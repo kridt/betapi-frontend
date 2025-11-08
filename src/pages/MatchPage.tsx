@@ -6,6 +6,8 @@ import { OddsTable } from '../components/OddsTable';
 import { ProbabilityBar } from '../components/ProbabilityBar';
 import { MarketFilters } from '../components/MarketFilters';
 import { TableSkeleton } from '../components/Skeleton';
+import { StatisticalBreakdown } from '../components/StatisticalBreakdown';
+import { MatchStatsPredictions } from '../components/MatchStatsPredictions';
 import { formatDate, getStatusColor, cn } from '../lib/utils';
 
 export function MatchPage() {
@@ -145,16 +147,13 @@ export function MatchPage() {
         <div className="lg:col-span-1 space-y-6">
           <MarketFilters />
 
-          {/* Probabilities for 1X2 */}
-          {model?.markets['1X2']?.probabilities && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-surface rounded-lg p-4"
-            >
-              <h3 className="text-sm font-semibold text-text mb-3">Fair Probabilities (1X2)</h3>
-              <ProbabilityBar probabilities={model.markets['1X2'].probabilities} />
-            </motion.div>
+          {/* Statistical Breakdown */}
+          {model?.markets.metadata && summary && (
+            <StatisticalBreakdown
+              metadata={model.markets.metadata}
+              homeTeam={summary.home_team}
+              awayTeam={summary.away_team}
+            />
           )}
 
           {/* Last Updated */}
@@ -166,8 +165,8 @@ export function MatchPage() {
           )}
         </div>
 
-        {/* Right Column - Odds Table */}
-        <div className="lg:col-span-3">
+        {/* Right Column - Odds Table & Stats Predictions */}
+        <div className="lg:col-span-3 space-y-6">
           {isLoading && <TableSkeleton rows={10} />}
 
           {model && model.markets.all_opportunities && (
@@ -183,6 +182,21 @@ export function MatchPage() {
                   </p>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {/* Match Statistics Predictions */}
+          {model?.markets.stats_predictions && summary && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <MatchStatsPredictions
+                predictions={model.markets.stats_predictions}
+                homeTeam={summary.home_team}
+                awayTeam={summary.away_team}
+              />
             </motion.div>
           )}
         </div>

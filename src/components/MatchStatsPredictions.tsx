@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, Target, AlertCircle, Info, Flag, Activity } from 'lucide-react';
+import { Target, Info, Flag, Activity } from 'lucide-react';
 
 interface StatPrediction {
-  total?: {
+  total?: number | {
     prediction: number;
     range?: { min: number; max: number };
     confidence: number;
@@ -12,6 +12,11 @@ interface StatPrediction {
       probability: number;
       reasoning: string;
     }>;
+    historical?: {
+      note: string;
+      recent_matches: string;
+      h2h_note: string;
+    };
   };
   home: number;
   away: number;
@@ -75,8 +80,8 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
               <Flag className="w-4 h-4 text-primary" />
               <h4 className="text-sm font-semibold text-text">Corners</h4>
             </div>
-            <span className={`text-xs ${getConfidenceColor(predictions.corners.total?.confidence || 0)}`}>
-              {predictions.corners.total?.confidence}% confidence
+            <span className={`text-xs ${getConfidenceColor(typeof predictions.corners.total === 'object' ? predictions.corners.total.confidence : 0)}`}>
+              {typeof predictions.corners.total === 'object' ? predictions.corners.total.confidence : 0}% confidence
             </span>
           </div>
 
@@ -87,8 +92,10 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
             </div>
             <div className="text-center">
               <p className="text-xs text-muted mb-1">Total</p>
-              <p className="text-2xl font-bold text-primary">{predictions.corners.total?.prediction}</p>
-              {predictions.corners.total?.range && (
+              <p className="text-2xl font-bold text-primary">
+                {typeof predictions.corners.total === 'object' ? predictions.corners.total.prediction : predictions.corners.total}
+              </p>
+              {typeof predictions.corners.total === 'object' && predictions.corners.total.range && (
                 <p className="text-xs text-muted mt-1">
                   ({predictions.corners.total.range.min}-{predictions.corners.total.range.max})
                 </p>
@@ -101,7 +108,7 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
           </div>
 
           {/* Historical Context */}
-          {predictions.corners.total?.historical && (
+          {typeof predictions.corners.total === 'object' && predictions.corners.total.historical && (
             <div className="mt-3 pt-3 border-t border-surface2">
               <p className="text-xs text-muted mb-1">
                 📊 {predictions.corners.total.historical.recent_matches}
@@ -110,7 +117,7 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
           )}
 
           {/* Corner Markets */}
-          {predictions.corners.total?.markets && predictions.corners.total.markets.length > 0 && (
+          {typeof predictions.corners.total === 'object' && predictions.corners.total.markets && predictions.corners.total.markets.length > 0 && (
             <div className="mt-3 pt-3 border-t border-surface2 space-y-2">
               <p className="text-xs font-medium text-text mb-2">
                 Value Markets ({predictions.corners.total.markets.length} opportunities):
@@ -152,8 +159,8 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
               <Target className="w-4 h-4 text-primary" />
               <h4 className="text-sm font-semibold text-text">Shots</h4>
             </div>
-            <span className={`text-xs ${getConfidenceColor(predictions.shots.total?.confidence || 0)}`}>
-              {predictions.shots.total?.confidence}% confidence
+            <span className={`text-xs ${getConfidenceColor(typeof predictions.shots.total === 'object' ? predictions.shots.total.confidence : 0)}`}>
+              {typeof predictions.shots.total === 'object' ? predictions.shots.total.confidence : 0}% confidence
             </span>
           </div>
 
@@ -164,8 +171,10 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
             </div>
             <div className="text-center">
               <p className="text-xs text-muted mb-1">Total</p>
-              <p className="text-2xl font-bold text-primary">{predictions.shots.total?.prediction}</p>
-              {predictions.shots.total?.range && (
+              <p className="text-2xl font-bold text-primary">
+                {typeof predictions.shots.total === 'object' ? predictions.shots.total.prediction : predictions.shots.total}
+              </p>
+              {typeof predictions.shots.total === 'object' && predictions.shots.total.range && (
                 <p className="text-xs text-muted mt-1">
                   ({predictions.shots.total.range.min}-{predictions.shots.total.range.max})
                 </p>
@@ -187,8 +196,8 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
               <Target className="w-4 h-4 text-positive" />
               <h4 className="text-sm font-semibold text-text">Shots on Target</h4>
             </div>
-            <span className={`text-xs ${getConfidenceColor(predictions.shots_on_target.total?.confidence || 0)}`}>
-              {predictions.shots_on_target.total?.confidence}% confidence
+            <span className={`text-xs ${getConfidenceColor(typeof predictions.shots_on_target.total === 'object' ? predictions.shots_on_target.total.confidence : 0)}`}>
+              {typeof predictions.shots_on_target.total === 'object' ? predictions.shots_on_target.total.confidence : 0}% confidence
             </span>
           </div>
 
@@ -199,7 +208,9 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
             </div>
             <div className="text-center">
               <p className="text-xs text-muted mb-1">Total</p>
-              <p className="text-2xl font-bold text-positive">{predictions.shots_on_target.total?.prediction}</p>
+              <p className="text-2xl font-bold text-positive">
+                {typeof predictions.shots_on_target.total === 'object' ? predictions.shots_on_target.total.prediction : predictions.shots_on_target.total}
+              </p>
             </div>
             <div className="text-center">
               <p className="text-xs text-muted mb-1">{awayTeam}</p>
@@ -215,7 +226,9 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
         {predictions.offsides && (
           <div className="bg-surface rounded-lg p-3">
             <p className="text-xs text-muted mb-2">Offsides</p>
-            <p className="text-lg font-bold text-text mb-1">{predictions.offsides.total}</p>
+            <p className="text-lg font-bold text-text mb-1">
+              {typeof predictions.offsides.total === 'number' ? predictions.offsides.total : predictions.offsides.total?.prediction}
+            </p>
             <div className="flex justify-between text-xs text-muted">
               <span>{predictions.offsides.home}</span>
               <span>{predictions.offsides.away}</span>
@@ -230,7 +243,9 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
         {predictions.fouls && (
           <div className="bg-surface rounded-lg p-3">
             <p className="text-xs text-muted mb-2">Fouls</p>
-            <p className="text-lg font-bold text-text mb-1">{predictions.fouls.total}</p>
+            <p className="text-lg font-bold text-text mb-1">
+              {typeof predictions.fouls.total === 'number' ? predictions.fouls.total : predictions.fouls.total?.prediction}
+            </p>
             <div className="flex justify-between text-xs text-muted">
               <span>{predictions.fouls.home}</span>
               <span>{predictions.fouls.away}</span>
@@ -245,7 +260,9 @@ export function MatchStatsPredictions({ predictions, homeTeam, awayTeam }: Match
         {predictions.cards && (
           <div className="bg-surface rounded-lg p-3">
             <p className="text-xs text-muted mb-2">Cards</p>
-            <p className="text-lg font-bold text-text mb-1">{predictions.cards.total}</p>
+            <p className="text-lg font-bold text-text mb-1">
+              {typeof predictions.cards.total === 'number' ? predictions.cards.total : predictions.cards.total?.prediction}
+            </p>
             <div className="flex justify-between text-xs text-muted">
               <span>{predictions.cards.home}</span>
               <span>{predictions.cards.away}</span>

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, RefreshCw, AlertCircle, TrendingUp } from 'lucide-react';
 import { useMatchSummary, useMatchModel } from '../hooks/useQueries';
 import { OddsTable } from '../components/OddsTable';
-import { ProbabilityBar } from '../components/ProbabilityBar';
 import { MarketFilters } from '../components/MarketFilters';
 import { TableSkeleton } from '../components/Skeleton';
 import { StatisticalBreakdown } from '../components/StatisticalBreakdown';

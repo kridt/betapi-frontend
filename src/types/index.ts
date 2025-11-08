@@ -95,7 +95,7 @@ export interface StatisticalMetadata {
 }
 
 export interface StatPrediction {
-  total?: {
+  total?: number | {
     prediction: number;
     range?: { min: number; max: number };
     confidence: number;
@@ -105,6 +105,11 @@ export interface StatPrediction {
       probability: number;
       reasoning: string;
     }>;
+    historical?: {
+      note: string;
+      recent_matches: string;
+      h2h_note: string;
+    };
   };
   home: number;
   away: number;
